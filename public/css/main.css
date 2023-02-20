@@ -1,7 +1,12 @@
 .body{
     font-family: cursive;
+    background-color: black;
 }
 .p{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.h2{
     font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
 /* Will do CSS later as the project goes on */
