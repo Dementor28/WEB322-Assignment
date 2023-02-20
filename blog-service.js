@@ -67,19 +67,13 @@ module.exports.getPublishedPosts = function () {
 
 
 module.exports.getCategories = function (){
-  return new Promise((resolve, reject) => {
-    initialize()
-      .then(({ categories }) => {
-        if (categories.length === 0) {
-          reject("no results available");
-          return;
-        }
-        resolve(categories);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+  var promise = new Promise((resolve, reject) => {
+    if (categories.length === 0) {
+      reject(errormsg);
+    }
+    resolve(categories);
   });
+  return promise;
 }
 
 module.exports.addPost = function (postData) {
