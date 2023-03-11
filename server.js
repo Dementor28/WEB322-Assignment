@@ -171,36 +171,39 @@ app.get("/blog", async (req, res) => {
   res.render("blog", { data: viewData });
 });
 
-app.get("/posts", (req, res) => {
-  if ((req, query.category)) {
-    blogService
-      .getPostsByCategory(req.query.category)
-      .then(function (data) {
-        res.render("posts", { posts: data });
+app.get("/posts", (req,res)=>{
+
+  if(req.query.category)
+  {
+      blogService.getPostsByCategory(req.query.category)
+      .then(function(data){
+          res.render("posts", {posts: data});
       })
       .catch(function (err) {
-        res.render("posts", { message: "no results" });
-      });
-  } else if (req.query.minDateStr) {
-    blogService
-      .getPostsByMinDate(req.query.minDateStr)
-      .then(function (data) {
-        res.render("posts", { posts: data });
+          res.render("posts", {message: "no results"});
+  });
+
+  }
+  else if(req.query.minDateStr){
+      blogService.getPostsByMinDate(req.query.minDateStr)
+      .then(function(data){
+          res.render("posts", {posts: data});
       })
-      .catch(function (err) {
-        res.render("posts", { message: "no results" });
-      });
-  } else {
-    blogService
-      .getAllPosts()
-      .then((data) => {
-        res.render("posts", { posts: data });
+      .catch(function(err){
+          res.render("posts", {message: "no results"});
+      })
+  }
+  else
+  {
+      blogService.getAllPosts()
+      .then((data)=>{
+          res.render("posts", {posts: data});
       })
 
       .catch((err) => {
-        res.render("posts", { message: "no results" });
-      });
-  }
+          res.render("posts", {message: "no results"});
+      })
+  }  
 });
 
 // Add the "/post/value" route
