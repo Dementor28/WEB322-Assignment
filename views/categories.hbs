@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-md-12">
+          <h2>Categories</h2>
+          <hr />
+
+          {{!-- <p>TODO: render a list of all category id's and categories here</p> --}}
+          	<table class="table">
+    <thead>
+        <tr>
+            <th>Category ID</th>
+            <th>Category Name</th>
+            <th></th>
+        </tr>
+    </thead>
+        {{#each categories}}
+        <tbody>
+        <tr>
+            <td><a href="/posts?category={{id}}">{{id}}</a></td>
+            <td><a href="/posts?category={{id}}">{{category}}</a></td>
+        </tr>
+        </tbody>
+        {{/each}}
+    </table>
+
+    </div>
+    {{!-- //This will allow us to correctly show the error message from the .catch() in our route --}}
+    <div class="col-md-12 text-center">
+        {{#unless categories}}
+            <strong>{{message}}</strong>
+        {{/unless}}
+</div>
+
+</div>

@@ -122,17 +122,15 @@ module.exports.getPostsByCategory = function (category) {
 // };
 
 
-module.exports.getPostsByMinDate = (minDateStr) => {
+module.exports.getPostsByMinDate = function(minDateStr) {
   return new Promise((resolve, reject) => {
-      const read = fs.readFileSync('./data/posts.json');
-      var publishedPosts = JSON.parse(read);
-      var filter = publishedPosts.filter(a => new Date(a.postDate) >= new Date(minDateStr));
-      if (filter.length > 0) {
-          resolve(filter);
-      } else {
-          reject(errormsg);
-      }
+      let filteredPosts = posts.filter(post => (new Date(post.postDate)) >= (new Date(minDateStr)))
 
+      if (filteredPosts.length == 0) {
+          reject("no results returned")
+      } else {
+          resolve(filteredPosts);
+      }
   });
 }
 
