@@ -132,25 +132,16 @@ app.get("/blog", async (req, res) => {
   let viewData = {};
 
   try {
-    // declare empty array to hold "post" objects
     let posts = [];
-
-    // if there's a "category" query, filter the returned posts by category
     if (req.query.category) {
-      // Obtain the published "posts" by category
       posts = await blogService.getPublishedPostsByCategory(req.query.category);
     } else {
-      // Obtain the published "posts"
       posts = await blogService.getPublishedPosts();
     }
-
-    // sort the published posts by postDate
     posts.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
 
-    // get the latest post from the front of the list (element 0)
     let post = posts[0];
 
-    // store the "posts" and "post" data in the viewData object (to be passed to the view)
     viewData.posts = posts;
     viewData.post = post;
   } catch (err) {
@@ -158,16 +149,13 @@ app.get("/blog", async (req, res) => {
   }
 
   try {
-    // Obtain the full list of "categories"
     let categories = await blogService.getCategories();
 
-    // store the "categories" data in the viewData object (to be passed to the view)
     viewData.categories = categories;
   } catch (err) {
     viewData.categoriesMessage = "no results";
   }
 
-  // render the "blog" view with all of the data (viewData)
   res.render("blog", { data: viewData });
 });
 
