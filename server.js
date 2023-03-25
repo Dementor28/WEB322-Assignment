@@ -235,7 +235,7 @@ app.get("/posts/add", (req, res) => {
   blogService
     .getCategories()
     .then((categories) => {
-      res.render("addPost", { categories: data });
+      res.render("addPost", { categories: categories });
     })
     .catch((err) => {
       res.render("addPost", { categories: [] });
