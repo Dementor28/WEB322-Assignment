@@ -3,6 +3,7 @@
     <div class="table-responsive">
     <div class="col-md-12">
            <h2>Posts</h2>
+           <a href="/posts/add" class="btn btn-success pull-right">Add Post</a>
           <hr />
 
 	<table class="table">
@@ -24,6 +25,7 @@
         <td>{{this.postDate}}</td>
         <td><a href="/posts?category={{category}}">{{category}}</a></td>
         <td>{{this.published}}</td>
+        <td><a href="/posts/delete/{{id}}"class="btn btn-danger"> Remove</a></td>
 
     </tr>
     </tbody>

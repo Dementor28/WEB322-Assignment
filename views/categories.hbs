@@ -1,33 +1,43 @@
 <div class="row">
-    <div class="col-md-12">
-          <h2>Categories</h2>
-          <hr />
+  <div class="col-md-12">
+    <h2>Categories</h2>
+    <a href="/categories/add" class="btn btn-success pull-right">Add Category</a>
+    <hr />
 
-          {{!-- <p>TODO: render a list of all category id's and categories here</p> --}}
-          	<table class="table">
-    <thead>
+    <table class="table">
+      <thead>
         <tr>
-            <th>Category ID</th>
-            <th>Category Name</th>
-            <th></th>
+          <th>Category ID</th>
+          <th>Category Name</th>
+          <th></th>
         </tr>
-    </thead>
-        {{#each categories}}
+      </thead>
+      {{#if categories}}
         <tbody>
-        <tr>
-            <td><a href="/posts?category={{id}}">{{id}}</a></td>
-            <td><a href="/posts?category={{id}}">{{category}}</a></td>
-        </tr>
+          {{#each categories}}
+            <tr>
+              <td><a href="/posts?category={{id}}">{{id}}</a></td>
+              <td><a href="/posts?category={{id}}">{{category}}</a></td>
+              <td><a href="/categories/delete/{{id}}" class="btn btn-danger">
+                  Remove</a></td>
+            </tr>
+          {{/each}}
         </tbody>
-        {{/each}}
+        {{else}}
+        <tbody>
+            <tr>
+                <td colspan="2" class="text-center">{{message}}</td>
+            </tr>
+        </tbody>
+        {{/if}}
     </table>
 
-    </div>
-    {{!-- //This will allow us to correctly show the error message from the .catch() in our route --}}
-    <div class="col-md-12 text-center">
-        {{#unless categories}}
-            <strong>{{message}}</strong>
-        {{/unless}}
-</div>
+  {{!-- </div>
+  {{! //This will allow us to correctly show the error message from the .catch() in our route }}
+  <div class="col-md-12 text-center">
+    {{#unless categories}}
+      <strong>{{message}}</strong>
+    {{/unless}}
+  </div>
 
-</div>
+</div> --}}
