@@ -66,7 +66,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-// Regular middleware
+//Regular middleware
 app.use(express.urlencoded({ extended: true }));
 
 app.engine(
