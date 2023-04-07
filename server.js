@@ -3,12 +3,14 @@
  *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part of this assignment has been copied manually or electronically from any other source
  *  (including 3rd party web sites) or distributed to other students.
  *
- *  Name:Abdullah Student ID: 152158200 Date: 23 March 2023
+ *  Name:Abdullah Student ID: 152158200 Date: 05 Arpil 2023
  *
  *  Online (Cyclic) Link: https://funny-ray-cuff-links.cyclic.app/posts/add
  *
  ********************************************************************************/
 
+const clientSessions = require("client-sessions");
+const authData = require("./auth-service.js");
 const express = require("express");
 const exphbs = require("express-handlebars");
 const multer = require("multer");
@@ -18,9 +20,7 @@ const streamifier = require("streamifier");
 const blogService = require("./blog-service");
 var fs = require("fs");
 
-
 const upload = multer(); // no { storage: storage } since we are not using disk storage
-
 
 const app = express();
 app.use(express.static("./public"));
@@ -30,6 +30,44 @@ app.use(express.urlencoded({ extended: true }));
 // const ejs = require("ejs");
 // app.set("view engine", "ejs");
 const stripJs = require("strip-js");
+
+// Setup client-sessions
+app.use(
+  clientSessions({
+    cookieName: "session", // this is the object name that will be added to 'req'
+    secret: "week10web322assignment6", // this should be a long un-guessable string.
+    duration: 2 * 60 * 1000, // duration of the session in milliseconds (2 minutes)
+    activeDuration: 1000 * 60, // the session will be extended by this many ms each request (1 minute)
+  })
+);
+
+//Middleware function
+app.use(function (req, res, next) {
+  res.locals.session = req.session;
+  next();
+});
+
+function ensureLogin(req, res, next) {
+  if (!req.session.user) {
+    res.redirect("/login");
+  } else {
+    next();
+  }
+}
+
+app.use(function (req, res, next) {
+  let route = req.path.substring(1);
+  app.locals.activeRoute =
+    "/" +
+    (isNaN(route.split("/")[1])
+      ? route.replace(/\/(?!.*)/, "")
+      : route.replace(/\/(.*)/, ""));
+  app.locals.viewingCategory = req.query.category;
+  next();
+});
+
+// Regular middleware
+app.use(express.urlencoded({ extended: true }));
 
 app.engine(
   ".hbs",
@@ -71,7 +109,6 @@ app.engine(
 );
 app.set("view engine", ".hbs");
 
-
 //Redirect to the home page
 app.use(function (req, res, next) {
   let route = req.path.substring(1);
@@ -84,17 +121,14 @@ app.use(function (req, res, next) {
   next();
 });
 
-
 //Redirect to blog for /
 app.get("/", (req, res) => {
   res.redirect("/blog");
 });
 
-
 app.get("/about", (req, res) => {
   res.render("about");
 });
-
 
 app.get("/blog", async (req, res) => {
   let viewData = {};
@@ -214,7 +248,6 @@ app.get("/blog/:id", async (req, res) => {
   res.render("blog", { data: viewData });
 });
 
-
 app.get("/categories", (req, res) => {
   blogService
     .getCategories()
@@ -322,17 +355,67 @@ app.get("/posts/delete/:id", (req, res) => {
     });
 });
 
+//New Routes
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
+app.post("/login", (req, res) => {
+  req.body.userAgent = req.get("User-Agent");
+  authData
+    .checkUser(req.body)
+    .then((user) => {
+      req.session.user = {
+        userName: user.userName,
+        email: user.email,
+        loginHistory: user.loginHistory,
+      };
+      res.redirect("/posts");
+    })
+    .catch((err) => {
+      res.render("login", { errorMessage: err, userName: req.body.userName });
+    });
+});
+
+app.post("/register", (req, res) => {
+  authData
+    .registerUser(req.body)
+    .then(() => {
+      res.render("register", { successMessage: "User created" });
+    })
+    .catch((err) => {
+      res.render("register", {
+        errorMessage: err,
+        userName: req.body.userName,
+      });
+    });
+});
+
+app.get("/logout", (req, res) => {
+  req.session.reset();
+  res.redirect("/");
+});
+
+app.get("/userHistory", ensureLogin, (req, res) => {
+  res.render("userHistory");
+});
+
 app.use("*", (req, res) => {
   res.status(404).sendFile(path.join(__dirname + "/views/sorry404.html"));
 });
 
 blogService
   .initialize()
+  .then(authData.initialize)
   .then(() => {
     app.listen(HTTP_PORT, onHttpStart);
   })
   .catch((err) => {
-    console.log("error", err);
+    console.log("Error starting server", err);
   });
 const HTTP_PORT = process.env.PORT || 8080;
 function onHttpStart() {
@@ -344,4 +427,3 @@ cloudinary.config({
   api_secret: "9YrmTclJ5Lz13g9nnHL7yZQ3Pnc",
   secure: true,
 });
-
