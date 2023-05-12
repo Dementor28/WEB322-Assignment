@@ -3,9 +3,9 @@
  *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part of this assignment has been copied manually or electronically from any other source
  *  (including 3rd party web sites) or distributed to other students.
  *
- *  Name:Abdullah Student ID: 152158200 Date: 05 Arpil 2023
+ *  Name:Abdullah Student ID: ######### Date: 05 Arpil 2023
  *
- *  Online (Cyclic) Link: https://funny-ray-cuff-links.cyclic.app/posts/add
+ *  Online (Cyclic) Link:
  *
  ********************************************************************************/
 
@@ -35,7 +35,7 @@ const stripJs = require("strip-js");
 app.use(
   clientSessions({
     cookieName: "session", // this is the object name that will be added to 'req'
-    secret: "week10web322assignment6", // this should be a long un-guessable string.
+    secret: "", // this should be a long un-guessable string.
     duration: 2 * 60 * 1000, // duration of the session in milliseconds (2 minutes)
     activeDuration: 1000 * 60, // the session will be extended by this many ms each request (1 minute)
   })
@@ -422,8 +422,8 @@ function onHttpStart() {
   console.log("Express http server listening on port " + HTTP_PORT);
 }
 cloudinary.config({
-  cloud_name: "devvtx5mb",
-  api_key: "245521392787718",
-  api_secret: "9YrmTclJ5Lz13g9nnHL7yZQ3Pnc",
+  cloud_name: "",
+  api_key: "",
+  api_secret: "",
   secure: true,
 });
